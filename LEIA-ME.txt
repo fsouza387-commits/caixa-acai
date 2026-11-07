@@ -1,0 +1,71 @@
+CAIXA DA AÇAITERIA — VERSÃO iPAD (app instalável / PWA)
+=========================================================
+
+O QUE É
+Um app que você instala na Tela de Início do iPad (ícone próprio, tela cheia, funciona SEM internet).
+Os dados (vendas, estoque, caixa...) ficam guardados DENTRO do iPad. Foi testado com 2 anos de vendas
+(cerca de 80 mil) e continua rápido.
+
+IMPORTANTE: por que não é um "instalador"?
+A Apple só permite instalar aplicativos de fora da App Store com Mac + conta de desenvolvedor paga.
+O app web instalável (PWA) é o caminho equivalente e gratuito.
+
+PARTE 1 — COLOCAR O APP NA INTERNET (UMA ÚNICA VEZ, 10 minutos, pode ser feito no computador)
+O app precisa de um endereço https para o iPad conseguir instalá-lo. Esse endereço guarda só o PROGRAMA,
+nunca os seus dados de vendas. Opção gratuita e permanente: GitHub Pages.
+
+ 1. Crie uma conta grátis em github.com (se ainda não tiver).
+ 2. Clique em "New repository". Nome sugerido: caixa-acai. Marque "Public" e crie.
+ 3. Clique em "uploading an existing file" (ou Add file > Upload files) e arraste TODOS os arquivos
+    desta pasta (index.html, sw.js, manifest.webmanifest, icon-180.png, icon-192.png, icon-512.png).
+    Clique em "Commit changes".
+ 4. Vá em Settings > Pages. Em "Branch" escolha "main" e a pasta "/ (root)". Salve.
+ 5. Aguarde 1 a 2 minutos. O endereço será:  https://SEU-USUARIO.github.io/caixa-acai/
+    (aparece no topo da página Pages).
+
+ Atenção: o código do app ficará público (qualquer um com o link vê o programa), mas NENHUM dado seu vai
+ para lá. Não divulgue o link se não quiser. (Alternativa com o mesmo resultado: Netlify ou Cloudflare Pages,
+ enviando a pasta pelo site deles.)
+
+PARTE 2 — INSTALAR NO iPAD
+ 1. Abra o endereço acima no SAFARI do iPad (precisa ser o Safari).
+ 2. Toque no botão Compartilhar (quadrado com seta para cima).
+ 3. Toque em "Adicionar à Tela de Início" > Adicionar.
+ 4. Feche o Safari. Abra o app pelo ícone "Caixa Açaí".
+
+ >>> Só comece a lançar dados DEPOIS de instalar e abrindo pelo ÍCONE. O que for lançado dentro do Safari
+     NÃO aparece no app instalado (são armazenamentos separados).
+ >>> NUNCA apague o ícone do app ou o "dados de sites" do Safari sem antes fazer backup: apagar o app
+     apaga os dados.
+ >>> Para não ficar sem internet na primeira vez: abra o app uma vez com Wi-Fi. Depois funciona offline.
+
+COMO TRAZER OS DADOS DO COMPUTADOR (opcional)
+ No computador: Parâmetros > Fazer backup agora. Envie o arquivo .json para o iPad (AirDrop, e-mail, iCloud).
+ No app do iPad: Parâmetros > Restaurar backup > escolha o arquivo.
+ (O mesmo arquivo de backup funciona nos dois sentidos.)
+
+BACKUP — A COISA MAIS IMPORTANTE (2 anos de histórico)
+ - Em Parâmetros > "Fazer backup agora" abre a folha de compartilhamento do iPad: escolha "Salvar em Arquivos"
+   (iCloud Drive) ou envie por e-mail/WhatsApp para você mesmo.
+ - Faça isso toda semana e depois de fechar o caixa (a janela de fechamento já tem o botão "Salvar backup").
+ - O app avisa em amarelo quando passa 7 dias sem backup.
+ - Se o iPad for trocado, formatado ou perdido, é o backup que recupera tudo.
+ - Guarde também em um segundo lugar (e-mail ou computador), de preferência todo mês.
+
+RELATÓRIOS DE LONGO PRAZO
+ Em Relatórios há "Este ano", "Últimos 12 meses" e "Últimos 24 meses". Em períodos longos o gráfico mostra
+ vendas por MÊS. O botão "Vendas (Excel/CSV)" exporta o período para planilha.
+ Em Parâmetros > "Armazenamento neste iPad" você vê quantas vendas estão guardadas.
+
+ATUALIZAR O APP NO FUTURO
+ Substitua os arquivos no GitHub (Add file > Upload files, mesmo nome). Com internet, o app se atualiza
+ sozinho na próxima abertura (feche e abra duas vezes). Os dados não são afetados.
+
+IMPRESSÃO
+ "Imprimir cupom" usa o AirPrint (impressora Wi-Fi compatível). Impressoras térmicas Bluetooth comuns
+ não aparecem no AirPrint.
+
+DICAS
+ - Use o iPad na horizontal ou em pé: o layout se adapta.
+ - Modo escuro: botão no topo.
+ - Os ícones (i) explicam cada campo.
