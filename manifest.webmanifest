@@ -1,0 +1,16 @@
+{
+  "name": "Caixa da Açaiteria",
+  "short_name": "Caixa Açaí",
+  "description": "Sistema de caixa, estoque e relatórios da açaiteria",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#4b1d6e",
+  "theme_color": "#4b1d6e",
+  "lang": "pt-BR",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}
