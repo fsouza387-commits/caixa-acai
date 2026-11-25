@@ -849,8 +849,8 @@ function okAbrir(){
 function resCaixa(id){
   const c=db.caixas.find(x=>x.id===id);
   const vs=db.vendas.filter(v=>v.caixaId===id&&v.status==='ok'),r=resumo(vs);
-  const m=db.movs.filter(x=>x.caixaId===id);
-  const sup=r2(m.filter(x=>x.tipo==='sup').reduce((s,x)=>s+x.valor,0)),san=r2(m.filter(x=>x.tipo==='san').reduce((s,x)=>s+x.valor,0));
+  const m=db.movs.filter(x=>x.caixaId===id),at=m.filter(x=>!x.canc);
+  const sup=r2(at.filter(x=>x.tipo==='sup').reduce((s,x)=>s+x.valor,0)),san=r2(at.filter(x=>x.tipo==='san').reduce((s,x)=>s+x.valor,0));
   return{c:c,r:r,m:m,sup:sup,san:san,esperado:r2(c.inicial+r.porForma.din+sup-san),canc:db.vendas.filter(v=>v.caixaId===id&&v.status!=='ok').length};
 }
 function tCaixa(){
@@ -860,7 +860,7 @@ function tCaixa(){
     h+='<div class="card"><div class="row sp"><div><b>Caixa aberto</b> por '+esc(cx.operador)+' em '+fdata(cx.ts)+'</div><div class="row"><button class="btn am" onclick="mov(\'sup\')">+ Suprimento</button><button class="btn red" onclick="mov(\'san\')">− Sangria</button><button class="btn" onclick="modalFechar()">Fechar caixa</button></div></div></div>'
     +'<div class="kpis"><div class="kpi"><small>Troco inicial</small><b>'+brl(cx.inicial)+'</b></div><div class="kpi"><small>Vendas ('+x.r.n+')</small><b>'+brl(x.r.total)+'</b></div><div class="kpi"><small>Suprimentos / Sangrias</small><b>'+brl(x.sup)+' / '+brl(x.san)+'</b></div><div class="kpi verde"><small>Dinheiro esperado na gaveta</small><b>'+brl(x.esperado)+'</b></div></div>'
     +'<div class="cols"><div class="card"><h3>Vendas por forma</h3><table>'+FORMAS.map(f=>'<tr><td>'+f.n+'</td><td class="n">'+brl(x.r.porForma[f.k])+'</td></tr>').join('')+'</table></div>'
-    +'<div class="card"><h3>Movimentações</h3>'+(x.m.length?'<table>'+x.m.map(m=>'<tr><td>'+fdata(m.ts)+'</td><td>'+(m.tipo==='sup'?'Suprimento':'Sangria')+'</td><td>'+esc(m.motivo)+'</td><td class="n">'+brl(m.valor)+'</td></tr>').join('')+'</table>':'<p class="muted">Nenhuma.</p>')+'</div></div>';
+    +'<div class="card"><h3>Movimentações</h3>'+(x.m.length?'<table>'+x.m.map(m=>'<tr'+(m.canc?' style="opacity:.55"':'')+'><td>'+fdata(m.ts)+'</td><td>'+(m.tipo==='sup'?'Suprimento':'Sangria')+'</td><td>'+esc(m.motivo)+'</td><td class="n"'+(m.canc?' style="text-decoration:line-through"':'')+'>'+brl(m.valor)+'</td><td class="n">'+(m.canc?'<span class="tag r">Cancelada</span>':'<button class="btn sm gray" onclick="cancelarMov(\''+m.id+'\')">Cancelar</button>')+'</td></tr>').join('')+'</table>':'<p class="muted">Nenhuma.</p>')+'</div></div>';
   }else h+='<div class="card center"><p>O caixa está fechado.</p><button class="btn ok" onclick="abrirCaixa()">Abrir caixa</button></div>';
   const hist=db.caixas.filter(c=>c.status==='fechado').slice().reverse();
   h+='<div class="card"><h3>Histórico de fechamentos</h3>'+(hist.length?'<table><tr><th>Abertura</th><th>Fechamento</th><th>Operador</th><th class="n">Vendas</th><th class="n">Esperado</th><th class="n">Contado</th><th class="n">Diferença</th><th></th></tr>'
@@ -870,6 +870,12 @@ function tCaixa(){
 function mov(tipo){
   if(tipo==='san'&&!pinOk())return;
   modal('<h3>'+(tipo==='sup'?'Suprimento (entrada de dinheiro)':'Sangria (retirada de dinheiro)')+'</h3><label>Valor<input id="mv" inputmode="decimal"></label><label>Motivo<input id="mm" placeholder="'+(tipo==='sup'?'Ex.: reforço de troco':'Ex.: pagamento de fornecedor')+'"></label><div class="acts"><button class="btn gray" onclick="fechar()">Cancelar</button><button class="btn" onclick="okMov(\''+tipo+'\')">Salvar</button></div>');
+}
+function cancelarMov(id){
+  const m=db.movs.find(x=>x.id===id);if(!m||m.canc)return;
+  if(!pinOk())return;
+  if(!confirm('Cancelar '+(m.tipo==='sup'?'o suprimento':'a sangria')+' de '+brl(m.valor)+' ('+m.motivo+')?'))return;
+  m.canc=Date.now();save();render();
 }
 function okMov(tipo){
   const v=r2(pn($('#mv').value));if(v<=0)return;
